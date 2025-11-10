@@ -5,18 +5,25 @@ import pandas as pd
 # 1. Webpage URL
 url = "https://www.aedportugal.pt/en/members/"
 
-# 2. Download the page
-response = requests.get(url)
+# 2. Add headers to mimic a browser
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/118.0.5993.90 Safari/537.36"
+}
+
+# 3. Download the page with headers
+response = requests.get(url, headers=headers)
 response.raise_for_status()  # Stop if page fails
 html_content = response.text
 
-# 3. Parse HTML
+# 4. Parse HTML
 soup = BeautifulSoup(html_content, "html.parser")
 
-# 4. Find all company blocks
+# 5. Find all company blocks
 members = soup.find_all("div", class_="et_pb_team_member_description")
 
-# 5. Extract company names and websites
+# 6. Extract company names and websites
 company_names = []
 company_websites = []
 
@@ -35,7 +42,7 @@ for member in members:
     else:
         company_websites.append("N/A")
 
-# 6. Save to Excel
+# 7. Save to Excel
 df = pd.DataFrame({
     "Company Name": company_names,
     "Website": company_websites
